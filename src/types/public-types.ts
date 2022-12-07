@@ -6,6 +6,7 @@ export enum ViewMode {
   /** ISO-8601 week */
   Week = "Week",
   Month = "Month",
+  Delta = "Delta",
 }
 export type TaskType = "task" | "milestone" | "project";
 export interface Task {

@@ -10,6 +10,7 @@ import {
 } from "../../helpers/date-helper";
 import { DateSetup } from "../../types/date-setup";
 import styles from "./calendar.module.css";
+import differenceInDays from 'date-fns/differenceInDays'
 
 export type CalendarProps = {
   dateSetup: DateSetup;
@@ -173,6 +174,33 @@ export const Calendar: React.FC<CalendarProps> = ({
     return [topValues, bottomValues];
   };
 
+  const getValuesForDelta = () => {
+    const topValues: ReactChild[] = [];
+    const bottomValues: ReactChild[] = [];
+    //const topDefaultHeight = headerHeight * 0.5;
+    const dates = dateSetup.dates;
+    const startDate = dates[0];
+    for (let i = 0; i < dates.length; i++) {
+      const date = dates[i];
+      
+      
+      const bottomValue = differenceInDays(date,startDate);
+
+      bottomValues.push(
+        <text
+          key={date.getTime()}
+          y={headerHeight * 0.8}
+          x={columnWidth * i + columnWidth * 0.5}
+          className={styles.calendarBottomText}
+        >
+          {bottomValue}
+        </text>
+      );
+      
+    }
+    return [topValues, bottomValues];
+  };
+
   const getCalendarValuesForPartOfDay = () => {
     const topValues: ReactChild[] = [];
     const bottomValues: ReactChild[] = [];
@@ -283,6 +311,10 @@ export const Calendar: React.FC<CalendarProps> = ({
       break;
     case ViewMode.Hour:
       [topValues, bottomValues] = getCalendarValuesForHour();
+      break;
+    case ViewMode.Delta:
+      [topValues, bottomValues] = getValuesForDelta();
+      break;
   }
   return (
     <g className="calendar" fontSize={fontSize} fontFamily={fontFamily}>
